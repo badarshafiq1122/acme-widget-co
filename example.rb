@@ -19,33 +19,33 @@ delivery_rules = [
 # Create special offer
 offers = [BuyOneGetOneHalfPriceOffer.new('R01')]
 
-puts "Testing Acme Widget Co Sales System"
-puts "=================================="
-puts
+def run_test_case(basket, items, expected_total, description)
+  items.each { |code| basket.add(code) }
+  actual_total = basket.total
+  result = (actual_total - expected_total).abs < 0.01 ? "Pass" : "Fail"
+  puts "#{result} #{description}"
+  puts "  Items: #{items.join(', ')}"
+  puts "  Expected: $#{expected_total}"
+  puts "  Actual: $#{actual_total}"
+  puts
+end
 
-# Test case 1: Basic order with no special offers
+# Test Case 1: Basic order with no special offers
 basket = Basket.new(catalog, delivery_rules, offers)
-basket.add('B01')
-basket.add('G01')
-puts "Basic order (B01, G01): $#{basket.total}"
+run_test_case(basket, ['B01', 'G01'], 37.85, "Basic order with no special offers")
 
-# Test case 2: Order with special offer (buy one get one half price)
+# Test Case 2: Order with special offer (buy one get one half price)
 basket = Basket.new(catalog, delivery_rules, offers)
-basket.add('R01')
-basket.add('R01')
-puts "Order with special offer (R01, R01): $#{basket.total}"
+run_test_case(basket, ['R01', 'R01'], 54.37, "Order with special offer (buy one get one half price)")
 
-# Test case 3: Mixed order with and without special offers
+# Test Case 3: Mixed order with and without special offers
 basket = Basket.new(catalog, delivery_rules, offers)
-basket.add('R01')
-basket.add('G01')
-puts "Mixed order (R01, G01): $#{basket.total}"
+run_test_case(basket, ['R01', 'G01'], 60.85, "Mixed order with and without special offers")
 
-# Test case 4: Large order with multiple special offers
+# Test Case 4: Large order with multiple special offers and free delivery
 basket = Basket.new(catalog, delivery_rules, offers)
-basket.add('B01')
-basket.add('B01')
-basket.add('R01')
-basket.add('R01')
-basket.add('R01')
-puts "Large order with multiple offers: $#{basket.total}" 
+run_test_case(basket, ['B01', 'B01', 'R01', 'R01', 'R01'], 98.27, "Large order with multiple special offers and free delivery")
+
+# Test Case 5: Edge case - single item
+basket = Basket.new(catalog, delivery_rules, offers)
+run_test_case(basket, ['R01'], 37.90, "Edge case - single item")
