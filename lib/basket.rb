@@ -15,6 +15,19 @@ class Basket
   end
 
   def total
+    subtotal = calculate_subtotal
+    (subtotal + calculate_delivery_cost(subtotal)).floor(2)
+  end
+
+  private
+
+  def calculate_subtotal
     @items.sum(&:price)
+  end
+
+  def calculate_delivery_cost(subtotal)
+    # Find the first rule where the threshold is less than or equal to the subtotal
+    rule = @delivery_rules.find { |rule| rule[:threshold] <= subtotal }
+    rule[:cost]
   end
 end
