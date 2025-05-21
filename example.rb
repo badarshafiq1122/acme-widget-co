@@ -1,5 +1,6 @@
 require_relative 'lib/basket'
 require_relative 'lib/product'
+require_relative 'lib/offer'
 
 # Create product catalog
 catalog = {
@@ -15,28 +16,36 @@ delivery_rules = [
   { threshold: 0, cost: 4.95 }   # $4.95 delivery for all other orders
 ]
 
-# Create basket with no offers for now
-basket = Basket.new(catalog, delivery_rules, [])
+# Create special offer
+offers = [BuyOneGetOneHalfPriceOffer.new('R01')]
 
-# Test delivery cost calculation
-puts "Testing delivery cost calculation:"
-puts "================================="
+puts "Testing Acme Widget Co Sales System"
+puts "=================================="
+puts
 
-# Test case 1: Order under $50
-basket = Basket.new(catalog, delivery_rules, [])
+# Test case 1: Basic order with no special offers
+basket = Basket.new(catalog, delivery_rules, offers)
 basket.add('B01')
-basket.add('B01')
-puts "Order under $50: $#{basket.total}"
+basket.add('G01')
+puts "Basic order (B01, G01): $#{basket.total}"
 
-# Test case 2: Order between $50 and $90
-basket = Basket.new(catalog, delivery_rules, [])
+# Test case 2: Order with special offer (buy one get one half price)
+basket = Basket.new(catalog, delivery_rules, offers)
+basket.add('R01')
+basket.add('R01')
+puts "Order with special offer (R01, R01): $#{basket.total}"
+
+# Test case 3: Mixed order with and without special offers
+basket = Basket.new(catalog, delivery_rules, offers)
 basket.add('R01')
 basket.add('G01')
-puts "Order between $50 and $90: $#{basket.total}"
+puts "Mixed order (R01, G01): $#{basket.total}"
 
-# Test case 3: Order over $90
-basket = Basket.new(catalog, delivery_rules, [])
+# Test case 4: Large order with multiple special offers
+basket = Basket.new(catalog, delivery_rules, offers)
+basket.add('B01')
+basket.add('B01')
 basket.add('R01')
 basket.add('R01')
-basket.add('G01')
-puts "Order over $90: $#{basket.total}"
+basket.add('R01')
+puts "Large order with multiple offers: $#{basket.total}" 

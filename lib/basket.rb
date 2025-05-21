@@ -15,14 +15,24 @@ class Basket
   end
 
   def total
-    subtotal = calculate_subtotal
+    discounted_items = apply_offers
+    subtotal = calculate_subtotal(discounted_items)
+
     (subtotal + calculate_delivery_cost(subtotal)).floor(2)
   end
 
   private
 
-  def calculate_subtotal
-    @items.sum(&:price)
+  def apply_offers
+    result = @items
+    @offers.each do |offer|
+      result = offer.apply(result)
+    end
+    result
+  end
+
+  def calculate_subtotal(items)
+    items.sum(&:price)
   end
 
   def calculate_delivery_cost(subtotal)
