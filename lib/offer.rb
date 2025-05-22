@@ -11,6 +11,8 @@ class BuyOneGetOneHalfPriceOffer < Offer
   end
 
   def apply(items)
+    return items if items.empty?
+
     matching_items = items.select { |item| item.code == @product_code }
     return items if matching_items.length < 2
 

@@ -49,3 +49,7 @@ run_test_case(basket, ['B01', 'B01', 'R01', 'R01', 'R01'], 98.27, "Large order w
 # Test Case 5: Edge case - single item
 basket = Basket.new(catalog, delivery_rules, offers)
 run_test_case(basket, ['R01'], 37.90, "Edge case - single item")
+
+# Test Case 6: Empty basket
+basket = Basket.new(catalog, delivery_rules, offers)
+run_test_case(basket, [], 0.0, "Empty basket")

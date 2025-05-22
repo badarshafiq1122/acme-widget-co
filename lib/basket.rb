@@ -15,6 +15,8 @@ class Basket
   end
 
   def total
+    return 0.0 if @items.empty?
+
     discounted_items = apply_offers
     subtotal = calculate_subtotal(discounted_items)
 
@@ -38,6 +40,7 @@ class Basket
   def calculate_delivery_cost(subtotal)
     # Find the first rule where the threshold is less than or equal to the subtotal
     rule = @delivery_rules.find { |rule| rule[:threshold] <= subtotal }
+    raise "No delivery rule found for subtotal: #{subtotal}" unless rule
     rule[:cost]
   end
 end
